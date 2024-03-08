@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sculpture Room</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center children horizontally */
+            justify-content: center;
+            /* Center children vertically */
+            min-height: 100vh;
+            /* Minimum height of viewport */
+            background-color: black;
+        }
+
+        .display-flex {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            /* Distribute space around items */
+            width: 80vw;
+            /* Adjust based on preference */
+            max-width: 1000px;
+            /* Max width of the content area */
+        }
+
+        .canvas-container,
+        .image-container {
+            flex-grow: 1;
+            /* Allows the container to grow */
+            width: 40vw;
+            height: 40vw;
+            max-width: 800px;
+            max-height: 800px;
+            display: flex;
+            /* To center content inside the container */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+        }
+
+        .canvas-container {
+            border: 5px solid white;
+            /* For better visibility */
+            margin-right: 20px;
+            /* Spacing between the canvas and the image */
+        }
+
+        .image-container {
+            object-fit: cover;
+            /* Ensure the image covers the area nicely */
+            width: 100%;
+            /* Full width of its container */
+            height: 100%;
+            /* Maintain aspect ratio */
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            /* Center the buttons horizontally */
+            align-items: center;
+            /* Center the buttons vertically */
+            gap: 10px;
+            /* Adjust the space between buttons */
+            margin-top: 20px;
+            /* Space between the buttons container and the display-flex div */
+            width: 100%;
+            /* Take full width to center content */
+            flex-wrap: wrap;
+            /* Allow buttons to wrap in smaller screens */
+        }
+
+        .full-width-image {
+            width: 100%;
+            max-width: 1000px;
+            /* Maximum width to match the content area */
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
+            /* Space below the image */
+        }
+    </style>
+</head>
+
+<body>
+    <img src="vince title.png" alt="title" class="full-width-image">
+    <div class="display-flex">
+        <div class="canvas-container" id="canvas-container"></div>
+        <img id="highlightedImage" src="" alt="Highlighted Part" class="image-container">
+    </div>
+    <div class="buttons-container">
+        <button id="logCamera">Log Camera Orientation</button>
+        <button id="highlightPart1" data-img-src="hands.png">The Hands</button>
+        <button id="highlightPart1" data-img-src="hands.png">The River</button>
+        <button id="highlightPart1" data-img-src="hands.png">The Reflection</button>
+        <button id="highlightPart1" data-img-src="hands.png">Natural Wood Cracking</button>
+    </div>
+    <script type="module" src="/main.js"></script>
+
+</body>
+
+</html>
