@@ -66,28 +66,37 @@ function loadOBJModel(objPath, mtlPath) {
         );
 }
 
-// Event listener for window resize
-window.addEventListener('resize', onWindowResize, false);
-
 function onWindowResize() {
-    // Update container dimensions
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    // Identify both containers
+    const canvasContainer = document.getElementById('canvas-container');
+    const imageContainer = document.getElementById('highlightedImage'); // Assuming this is the img inside .image-container
 
-    // Update renderer size to fill the container
-    renderer.setSize(width, height);
+    // Define maximum dimensions based on window size
+    const maxDimension = Math.min(window.innerWidth, window.innerHeight, 600); // Adjust max size as needed
 
-    // Update camera aspect ratio and projection matrix
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+    // Compute size to maintain aspect ratio and not exceed max dimensions
+    const size = Math.min(window.innerWidth, window.innerHeight, maxDimension);
 
-    // Render the scene again with the new sizes
-    renderer.render(scene, camera);
+    // Set dimensions for both the canvas and image containers
+    canvasContainer.style.width = `${size}px`;
+    canvasContainer.style.height = `${size}px`;
+    imageContainer.style.width = `${size}px`;
+    imageContainer.style.height = `${size}px`;
+
+    // Adjust renderer for the canvas container
+    if (renderer) {
+        renderer.setSize(size, size);
+        camera.aspect = 1; // Since it's square
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
+    }
 }
 
-// Initial call to make sure everything is sized correctly from the start
-onWindowResize();
+// Listen for window resize events
+window.addEventListener('resize', onWindowResize, false);
 
+// Call initially to set sizes correctly from the start
+onWindowResize();
 
 // orbitControls for interaction
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -138,32 +147,209 @@ loadOBJModel('textured.obj', 'textured.mtl');
 document.getElementById('logCamera').addEventListener('click', () => {
     console.log(`Camera Position: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
     console.log(`Camera Rotation: ${camera.rotation.x}, ${camera.rotation.y}, ${camera.rotation.z}`);
-});
+}); function setupButton(buttonId, targetPosition, targetRotation, imgSrc, annotations) {
+    document.getElementById(buttonId).addEventListener('click', () => {
+        moveToPosition(targetPosition, targetRotation);
 
-document.getElementById('highlightPart1').addEventListener('click', () => {
-    // Example target position and rotation for the camera
-    const targetPosition = [1.2886779542406064, 1.2886779542406066, 1.2886779542406066];
-    const targetRotation = [-0.7853981633974482, 0.6154797086703871, 0.5235987755982987];
+        const imageElement = document.getElementById('highlightedImage');
+        // Remove existing annotations
+        document.querySelectorAll('.imageAnnotation').forEach(el => el.remove());
+
+        // Create and append new annotations
+        annotations.forEach(annotation => {
+            const annotationDiv = document.createElement('div');
+            annotationDiv.classList.add('imageAnnotation'); // Use class for multiple annotations
+            // Directly use CSS for styling, remove inline style setting here
+            annotationDiv.style.left = annotation.position.left; // Specify position
+            annotationDiv.style.top = annotation.position.top;
+            annotationDiv.innerHTML = annotation.text;
+
+            document.querySelector('.display-flex').appendChild(annotationDiv); // Adjust the container if necessary
+        });
+
+        imageElement.style.opacity = '0'; // Start fade out
+
+        setTimeout(() => {
+            imageElement.src = imgSrc; // Change the image source
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    imageElement.onload = () => {
+                        imageElement.style.opacity = '1'; // Start fade in
+                        // Show annotations after the image has faded in
+                        document.querySelectorAll('.imageAnnotation').forEach(annotationDiv => {
+                            annotationDiv.style.display = 'block';
+                            setTimeout(() => {
+                                annotationDiv.style.opacity = '1';
+                            }, 20); // Small delay to ensure transition plays
+                        });
+                    };
+                    // Fallback for cached images
+                    if (imageElement.complete) {
+                        imageElement.style.opacity = '1';
+                    }
+                }, 20);
+            });
+        }, 1000); // Wait for the fade-out transition
+    });
+}
+// Assuming the setupButton function or similar setup where annotations are added
+document.getElementById('highlightHands').addEventListener('click', () => {
+    const targetPosition = [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873];
+    const targetRotation = [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574];
     moveToPosition(targetPosition, targetRotation);
 
-    // Retrieve the image source from the button's data attribute
-    const imgSrc = document.getElementById('highlightPart1').getAttribute('data-img-src');
-    console.log(imgSrc);
-
-    // Get the image element
+    const imgSrc = document.getElementById('highlightHands').getAttribute('data-img-src');
     const imageElement = document.getElementById('highlightedImage');
 
-    // fade out current image
-    imageElement.style.opacity = '0';
+    // Create and add the annotation for "The Hands"
+    const annotationText = `With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with more of a man-sized hands. Many people are in prison for actions they took when they were young sometimes the deeds of a child can have adult-sized consequences.`;
+    const annotationDiv = document.createElement('div');
+    annotationDiv.classList.add('imageAnnotation'); // Apply the CSS class
+    annotationDiv.innerHTML = annotationText;
+    // Set position dynamically if needed, or use predefined positions in CSS classes
+    annotationDiv.style.left = '20px';
+    annotationDiv.style.top = '20px';
+    document.querySelector('.display-flex').appendChild(annotationDiv);
 
-    // wait for a brief moment before changing the image and fading it in:
+    imageElement.style.opacity = '0'; // Start fade out
+
     setTimeout(() => {
-        imageElement.src = imgSrc;
-
-        // when the new image has loaded
-        imageElement.onload = () => {
-            // fade in new image
-            imageElement.style.opacity = '1';
-        };
-    }, 100); // delay of 100ms 
+        imageElement.src = imgSrc; // Change the image source
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                // Only start the fade-in after the image is loaded to avoid a blink
+                imageElement.onload = () => {
+                    imageElement.style.opacity = '1';
+                    annotationDiv.style.display = 'block'; // Make the annotation visible
+                };
+                imageElement.style.opacity = '1'; // Fallback for cached images
+            }, 20);
+        });
+    }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
 });
+
+
+// document.getElementById('highlightHands').addEventListener('click', () => {
+//     const targetPosition = [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873];
+//     const targetRotation = [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574];
+//     moveToPosition(targetPosition, targetRotation);
+
+//     const imgSrc = document.getElementById('highlightHands').getAttribute('data-img-src');
+//     const imageElement = document.getElementById('highlightedImage');
+
+//     // Ensure fade out is seen
+//     imageElement.style.opacity = '0';
+
+//     // Delay changing the image source until after the fade-out transition has had time to play
+//     setTimeout(() => {
+//         imageElement.src = imgSrc;
+//         // Wait for the next frame to ensure the src has been set
+//         requestAnimationFrame(() => {
+//             // Now, delay the fade-in to ensure it's smooth
+//             setTimeout(() => {
+//                 // Only start the fade-in after the image is loaded to avoid a blink
+//                 imageElement.onload = () => {
+//                     imageElement.style.opacity = '1';
+//                 };
+//                 // If the image is cached, the load event might not trigger after changing the src,
+//                 // so directly setting opacity might be necessary.
+//                 // This is a fallback in case the image loads too fast
+//                 imageElement.style.opacity = '1';
+//             }, 20); // Short delay to ensure the opacity change is recognized as a transition
+//         });
+//     }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
+// });
+
+
+// document.getElementById('highlightSplash').addEventListener('click', () => {
+//     const targetPosition = [0.09135275057812703, 0.42109411760641313, 0.40722327997076607];
+//     const targetRotation = [-0.691460007477806, 0.4341025015581536, 0.3350408722453509];
+//     moveToPosition(targetPosition, targetRotation);
+
+//     const imgSrc = document.getElementById('highlightSplash').getAttribute('data-img-src');
+//     const imageElement = document.getElementById('highlightedImage');
+
+//     // Ensure fade out is seen
+//     imageElement.style.opacity = '0';
+
+//     // Delay changing the image source until after the fade-out transition has had time to play
+//     setTimeout(() => {
+//         imageElement.src = imgSrc;
+//         // Wait for the next frame to ensure the src has been set
+//         requestAnimationFrame(() => {
+//             // Now, delay the fade-in to ensure it's smooth
+//             setTimeout(() => {
+//                 // Only start the fade-in after the image is loaded to avoid a blink
+//                 imageElement.onload = () => {
+//                     imageElement.style.opacity = '1';
+//                 };
+//                 // If the image is cached, the load event might not trigger after changing the src,
+//                 // so directly setting opacity might be necessary.
+//                 // This is a fallback in case the image loads too fast
+//                 imageElement.style.opacity = '1';
+//             }, 20); // Short delay to ensure the opacity change is recognized as a transition
+//         });
+//     }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
+// });
+
+// setupButton(
+//     'highlightHands',
+//     [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
+//     [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
+//     'hands.jpg',
+//     [
+//         {
+//             text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with more of a man-sized hands.",
+//             position: { left: '20px', top: '20px' }
+//         },
+//         {
+//             text: "Many people are in prison for actions they took when they were young; sometimes the deeds of a child can have adult-sized consequences.",
+//             position: { left: '20px', top: '100px' } // Adjust positioning as needed
+//         }
+//     ]
+// );
+
+const splashAnnotations = [
+    {
+        text: "Annotation 1 for Splash.",
+        position: { left: '20px', top: '20px' } // Adjust positioning as needed
+    },
+    {
+        text: "Annotation 2 for Splash.",
+        position: { left: '20px', top: '100px' } // Adjust positioning as needed
+    }
+    // Add more annotations as needed
+];
+
+setupButton(
+    'highlightSplash',
+    [0.09135275057812703, 0.42109411760641313, 0.40722327997076607],
+    [-0.691460007477806, 0.4341025015581536, 0.3350408722453509],
+    'fillourselves.jpg',
+    splashAnnotations
+);
+
+
+document.getElementById('menuIcon').addEventListener('click', function () {
+    const menuIcon = this;
+    const dynamicMenu = document.getElementById('dynamicMenu');
+    // Toggle the display of the dynamic menu
+    if (dynamicMenu.style.display === 'none') {
+        dynamicMenu.style.display = 'block';
+        menuIcon.classList.add('active'); // Indicate the menu is open
+    } else {
+        dynamicMenu.style.display = 'none';
+        menuIcon.classList.remove('active'); // Remove indication when menu is closed
+    }
+});
+
+// Optional: Close menu when a link is clicked
+document.querySelectorAll('#dynamicMenu ul li a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('dynamicMenu').style.display = 'none';
+        document.getElementById('menuIcon').classList.remove('active');
+    });
+});
+
+
+

@@ -4,65 +4,320 @@
 <head>
     <meta charset="utf-8">
     <title>Sculpture Room</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
-            /* Bootstrap light grey background */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center children horizontally */
+            justify-content: center;
+            /* Center children vertically */
+            min-height: 100vh;
+            /* Minimum height of viewport */
+            background-color: black;
+            color: white;
+            font-family: 'EB Garamond', serif;
+        }
+
+        .display-flex {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            /* Distribute space around items */
+            width: 80vw;
+            /* Adjust based on preference */
+            max-width: 1000px;
+            /* Max width of the content area */
+        }
+
+        .menu-icon-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 100;
+            /* Ensure it's above other content */
+        }
+
+        .menu-icon-container img.active {
+
+            opacity: 0.7;
+
+        }
+
+        .menu-icon-container img {
+            width: 10vmin;
+            /* 10% of the smallest dimension (viewport width or height) */
+            height: 10vmin;
+            /* 10% of the smallest dimension to keep it square and therefore circle */
+            border-radius: 50%;
+            /* Makes the square a circle */
+            object-fit: cover;
+            /* If you have an actual image, ensure it covers the circle properly */
+        }
+
+        .canvas-container,
+        .image-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+
         }
 
         .canvas-container {
-            border: 5px solid white;
+            /* border: 5px solid white; */
+            /* For better visibility */
             margin-right: 20px;
-            /* Adjusted for Bootstrap */
+            /* Spacing between the canvas and the image */
         }
 
         .image-container {
             object-fit: cover;
+            /* Ensure the image covers the area nicely */
             width: 100%;
+            /* Full width of its container */
             height: 100%;
+            /* Maintain aspect ratio */
+        }
+
+        .dynamic-menu {
+            position: absolute;
+            right: 10px;
+            top: 120px;
+            /* Adjusted down from the menu icon */
+            background: #654321;
+            /* Menu background color */
+            color: white;
+            /* Text color within the menu */
+            border: 1px solid #654321;
+            /* Optional: Adjust or remove border color as needed */
+            border-radius: 5px;
+            padding: 10px;
+            display: none;
+            /* Initially hidden */
+            width: 150px;
+            /* Adjust width as needed */
+        }
+
+        .dynamic-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dynamic-menu ul li a {
+            color: white;
+            /* Text color */
+            text-decoration: none;
+            /* Removes underline */
+            padding: 10px;
+            /* Adjust padding for better alignment and spacing */
+            display: block;
+            /* Makes the whole area clickable */
+            transition: background-color 0.3s ease;
+            background: #654321;
+            /* Smooth transition for hover effect */
+        }
+
+        .dynamic-menu ul li a:hover {
+            background-color: #333333;
+            /* Darker background on hover */
+            cursor: pointer;
+            /* Change cursor to indicate clickable */
+        }
+
+        .title-content {
+            position: absolute;
+            top: 10px;
+            /* Adjust based on your needs */
+            left: 10px;
+            /* Adjust based on your needs */
+            color: black;
+            /* Adjust based on your design */
+        }
+
+        .title-content p {
+            font-size: 3vmin;
+            /* Responsive font size, slightly smaller than the title */
+            margin: 0;
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+        }
+
+        .title-content h2 {
+            font-size: 4vmin;
+            /* Responsive font size */
+            margin: 0;
+            font-family: 'EB Garamond', serif;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            /* Center the buttons horizontally */
+            align-items: center;
+            /* Center the buttons vertically */
+            gap: 10px;
+            /* Adjust the space between buttons */
+            margin-top: 20px;
+            /* Space between the buttons container and the display-flex div */
+            width: 100%;
+            /* Take full width to center content */
+            flex-wrap: wrap;
+            /* Allow buttons to wrap in smaller screens */
+        }
+
+        .title-image-container {
+            position: relative;
+            /* This allows absolute positioning within */
+            width: 100%;
+            /* Adjust if necessary */
+            max-width: 1000px;
+            /* Matches your full-width-image */
+            margin-bottom: 20px;
+            /* Space below the image, adjust as needed */
         }
 
         .full-width-image {
             width: 100%;
+            max-width: 1000px;
+            /* Maximum width to match the content area */
             height: auto;
             display: block;
             margin-bottom: 20px;
+            /* Space below the image */
+        }
+
+        #highlightedImage {
+            transition: opacity 1s ease-in-out;
+            /* Adjust the duration as needed */
+            opacity: 0;
+            /* Start with the image invisible */
+        }
+
+        .buttons-container button {
+            background-color: #654321;
+            /* Dark brown background */
+            color: white;
+            /* White text */
+            border: none;
+            /* Remove default border */
+            padding: 8px 16px;
+            /* Adjust padding as needed */
+            margin: 5px;
+            /* Space between buttons */
+            text-align: center;
+            /* Center text within button */
+            text-decoration: none;
+            /* Remove underline from links */
+            display: inline-block;
+            /* Align buttons side by side */
+            font-size: 14px;
+            /* Adjust font size as needed */
+            cursor: pointer;
+            /* Change mouse cursor to pointer on hover */
+            border-radius: 5px;
+            /* Slightly rounded corners */
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+            /* Updated shadow for contrast */
+            transition: all 0.3s ease-in-out;
+            /* Smooth transition for hover effects */
+            font-family: inherit;
+            /* Inherit font from body or specified parent, adjust as needed */
+        }
+
+        .buttons-container button:hover {
+            background-color: #543210;
+            /* Slightly darker brown on hover */
+            box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+            /* Further enhance shadow effect on hover */
+        }
+
+        .instruction-text p {
+            color: #FFF;
+            /* Adjust text color as needed */
+            text-align: center;
+            /* Center-align the text */
+            margin-top: 20px;
+            margin-bottom: -10px;
+            /* Add some spacing around the text */
+            font-family: 'Garamond', serif;
+            /* Consistent font */
+            font-size: 18px;
+            /* Adjust font size as needed */
+        }
+
+        .imageAnnotation {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.63);
+            /* Black background with 63% opacity */
+            color: white;
+            /* White text */
+            font-family: 'EB Garamond', serif;
+            /* Consistent font with the rest of the page */
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            /* Initially hidden, will be made visible on button click */
+            transition: opacity 1s ease-in-out;
+            /* Smooth transition for fading in */
+            z-index: 10;
+            /* Ensure it's above the image */
         }
     </style>
 </head>
 
 <body>
-    <div class="container py-5">
-        <div class="row justify-content-center mb-3">
-            <img src="vince title.png" alt="title" class="full-width-image col-12">
+    <div class="title-image-container">
+        <img src="topPic.jpg" alt="title" class="full-width-image">
+        <div class="title-content">
+            <h2>Pabulum</h2>
+            <p><i>a sculpture by Vince Pane</i></p>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="canvas-container bg-light d-flex justify-content-center align-items-center"
-                    id="canvas-container" style="height: 400px;"></div>
-            </div>
-            <div class="col-md-6">
-                <img id="highlightedImage" src="" alt="Highlighted Part" class="image-container w-100"
-                    style="height: 400px;">
-            </div>
+        <div class="menu-icon-container">
+            <img src="menu.png" alt="Menu" id="menuIcon" />
         </div>
-        <div class="row justify-content-center mt-3">
-            <div class="buttons-container">
-                <button id="logCamera" class="btn btn-primary m-2">Log Camera Orientation</button>
-                <button id="highlightPart1" data-img-src="hands.png" class="btn btn-secondary m-2">The Hands</button>
-                <button id="highlightPart2" data-img-src="river.png" class="btn btn-secondary m-2">The River</button>
-                <button id="highlightPart3" data-img-src="reflection.png" class="btn btn-secondary m-2">The
-                    Reflection</button>
-                <button id="highlightPart4" data-img-src="cracking.png" class="btn btn-secondary m-2">Natural Wood
-                    Cracking</button>
-            </div>
+        <!-- Dynamic Menu Placeholder -->
+        <div id="dynamicMenu" class="dynamic-menu" style="display: none;">
+            <ul>
+                <li><a href="#exploreTheSculpture">Explore the Sculpture in 3D</a></li>
+                <li><a href="#PrisonRenaissance">The Prison Renaissance Project at Stanford</a></li>
+                <li><a href="#AboutTheArtist">About the Sculptor</a></li>
+                <!-- Add more list items/links as needed -->
+            </ul>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <h1 id="exploreTheSculpture">Explore the Sculpture in 3D</h1>
+    <div class="display-flex">
+        <div class="canvas-container" id="canvas-container"></div>
+        <img id="highlightedImage" src="" alt="Highlighted Part" class="image-container">
+    </div>
+    <div class="instruction-text">
+        <p>Click and drag to rotate around the sculpture (also hold down shift to translate). <br> Use the buttons below
+            for a guided tour, including quotes from the artist!
+        </p>
+    </div>
+    <div class="buttons-container">
+        <button id="logCamera">Log Camera Orientation</button>
+        <button id="highlightHands" data-img-src="hands.png">The Hands</button>
+        <button id="highlightRiver" data-img-src="hands.png">The River</button>
+        <button id="highlightSplash" data-img-src="fillourselves.jpg">The Splash</button>
+        <button id="highlightPart1" data-img-src="hands.png">The Reflection</button>
+        <button id="highlightCracking" data-img-src="cracking.png">Natural Wood Cracking</button>
+    </div>
+    <h1 id="PrisonRenaissance">The Prison Renaissance Project at Stanford</h1>
     <script type="module" src="/main.js"></script>
+    <h1 id="AboutTheArtist">About the Sculptor</h1>
+
+
+
 </body>
 
 </html>
