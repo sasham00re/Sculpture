@@ -147,187 +147,84 @@ loadOBJModel('textured.obj', 'textured.mtl');
 document.getElementById('logCamera').addEventListener('click', () => {
     console.log(`Camera Position: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
     console.log(`Camera Rotation: ${camera.rotation.x}, ${camera.rotation.y}, ${camera.rotation.z}`);
-}); function setupButton(buttonId, targetPosition, targetRotation, imgSrc, annotations) {
+});
+
+function setupButton(buttonId, targetPosition, targetRotation, imgSrc, annotations) {
     document.getElementById(buttonId).addEventListener('click', () => {
         moveToPosition(targetPosition, targetRotation);
 
         const imageElement = document.getElementById('highlightedImage');
-        // Remove existing annotations
-        document.querySelectorAll('.imageAnnotation').forEach(el => el.remove());
+        const annotationContainer = document.getElementById('imageAnnotationContainer');
+        clearAnnotations(annotationContainer); // Clear existing annotations
 
-        // Create and append new annotations
-        annotations.forEach(annotation => {
-            const annotationDiv = document.createElement('div');
-            annotationDiv.classList.add('imageAnnotation'); // Use class for multiple annotations
-            // Directly use CSS for styling, remove inline style setting here
-            annotationDiv.style.left = annotation.position.left; // Specify position
-            annotationDiv.style.top = annotation.position.top;
-            annotationDiv.innerHTML = annotation.text;
+        // Fade out image
+        imageElement.style.opacity = '0';
 
-            document.querySelector('.display-flex').appendChild(annotationDiv); // Adjust the container if necessary
-        });
-
-        imageElement.style.opacity = '0'; // Start fade out
-
+        // Delay changing the image source until after the fade-out transition has played
         setTimeout(() => {
-            imageElement.src = imgSrc; // Change the image source
+            imageElement.src = imgSrc;
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    imageElement.onload = () => {
-                        imageElement.style.opacity = '1'; // Start fade in
-                        // Show annotations after the image has faded in
-                        document.querySelectorAll('.imageAnnotation').forEach(annotationDiv => {
-                            annotationDiv.style.display = 'block';
-                            setTimeout(() => {
-                                annotationDiv.style.opacity = '1';
-                            }, 20); // Small delay to ensure transition plays
-                        });
-                    };
-                    // Fallback for cached images
+                    // Check if the image is already loaded or wait for the load event
                     if (imageElement.complete) {
+                        addAnnotations(annotationContainer, annotations);
                         imageElement.style.opacity = '1';
+                    } else {
+                        imageElement.onload = () => {
+                            addAnnotations(annotationContainer, annotations);
+                            imageElement.style.opacity = '1';
+                        };
                     }
                 }, 20);
             });
-        }, 1000); // Wait for the fade-out transition
+        }, 1000);
+
     });
 }
-// Assuming the setupButton function or similar setup where annotations are added
-document.getElementById('highlightHands').addEventListener('click', () => {
-    const targetPosition = [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873];
-    const targetRotation = [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574];
-    moveToPosition(targetPosition, targetRotation);
 
-    const imgSrc = document.getElementById('highlightHands').getAttribute('data-img-src');
-    const imageElement = document.getElementById('highlightedImage');
+function clearAnnotations(container) {
+    container.querySelectorAll('.annotation').forEach(annotation => annotation.remove());
+}
 
-    // Create and add the annotation for "The Hands"
-    const annotationText = `With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with more of a man-sized hands. Many people are in prison for actions they took when they were young sometimes the deeds of a child can have adult-sized consequences.`;
-    const annotationDiv = document.createElement('div');
-    annotationDiv.classList.add('imageAnnotation'); // Apply the CSS class
-    annotationDiv.innerHTML = annotationText;
-    // Set position dynamically if needed, or use predefined positions in CSS classes
-    annotationDiv.style.left = '20px';
-    annotationDiv.style.top = '20px';
-    document.querySelector('.display-flex').appendChild(annotationDiv);
+function addAnnotations(container, annotations) {
+    annotations.forEach((annotation, index) => {
+        console.log("getting here");
+        const elem = document.createElement('div');
+        elem.classList.add('annotation');
+        elem.textContent = annotation.text;
+        elem.style.top = `${annotation.top}%`;
+        elem.style.left = `${annotation.left}%`;
 
-    imageElement.style.opacity = '0'; // Start fade out
+        // Append and fade in with delay
+        container.appendChild(elem);
+        setTimeout(() => {
+            elem.style.opacity = '1';
+        }, 1000 * (index + 1)); // Delay subsequent annotations
+    });
+    console.log("annotations added");
+}
 
-    setTimeout(() => {
-        imageElement.src = imgSrc; // Change the image source
-        requestAnimationFrame(() => {
-            setTimeout(() => {
-                // Only start the fade-in after the image is loaded to avoid a blink
-                imageElement.onload = () => {
-                    imageElement.style.opacity = '1';
-                    annotationDiv.style.display = 'block'; // Make the annotation visible
-                };
-                imageElement.style.opacity = '1'; // Fallback for cached images
-            }, 20);
-        });
-    }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightHands',
+        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
+        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
+        'hands.jpg',
+        [
+            {
+                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+            },
+            {
+                text: "Inscription: A way to give voice to the voiceless", top: 43
+                , left: 60
+            }
+        ]
+    );
 });
 
-
-// document.getElementById('highlightHands').addEventListener('click', () => {
-//     const targetPosition = [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873];
-//     const targetRotation = [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574];
-//     moveToPosition(targetPosition, targetRotation);
-
-//     const imgSrc = document.getElementById('highlightHands').getAttribute('data-img-src');
-//     const imageElement = document.getElementById('highlightedImage');
-
-//     // Ensure fade out is seen
-//     imageElement.style.opacity = '0';
-
-//     // Delay changing the image source until after the fade-out transition has had time to play
-//     setTimeout(() => {
-//         imageElement.src = imgSrc;
-//         // Wait for the next frame to ensure the src has been set
-//         requestAnimationFrame(() => {
-//             // Now, delay the fade-in to ensure it's smooth
-//             setTimeout(() => {
-//                 // Only start the fade-in after the image is loaded to avoid a blink
-//                 imageElement.onload = () => {
-//                     imageElement.style.opacity = '1';
-//                 };
-//                 // If the image is cached, the load event might not trigger after changing the src,
-//                 // so directly setting opacity might be necessary.
-//                 // This is a fallback in case the image loads too fast
-//                 imageElement.style.opacity = '1';
-//             }, 20); // Short delay to ensure the opacity change is recognized as a transition
-//         });
-//     }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
-// });
-
-
-// document.getElementById('highlightSplash').addEventListener('click', () => {
-//     const targetPosition = [0.09135275057812703, 0.42109411760641313, 0.40722327997076607];
-//     const targetRotation = [-0.691460007477806, 0.4341025015581536, 0.3350408722453509];
-//     moveToPosition(targetPosition, targetRotation);
-
-//     const imgSrc = document.getElementById('highlightSplash').getAttribute('data-img-src');
-//     const imageElement = document.getElementById('highlightedImage');
-
-//     // Ensure fade out is seen
-//     imageElement.style.opacity = '0';
-
-//     // Delay changing the image source until after the fade-out transition has had time to play
-//     setTimeout(() => {
-//         imageElement.src = imgSrc;
-//         // Wait for the next frame to ensure the src has been set
-//         requestAnimationFrame(() => {
-//             // Now, delay the fade-in to ensure it's smooth
-//             setTimeout(() => {
-//                 // Only start the fade-in after the image is loaded to avoid a blink
-//                 imageElement.onload = () => {
-//                     imageElement.style.opacity = '1';
-//                 };
-//                 // If the image is cached, the load event might not trigger after changing the src,
-//                 // so directly setting opacity might be necessary.
-//                 // This is a fallback in case the image loads too fast
-//                 imageElement.style.opacity = '1';
-//             }, 20); // Short delay to ensure the opacity change is recognized as a transition
-//         });
-//     }, 1000); // Match this with the CSS transition time to ensure a smooth fade out before changing the image
-// });
-
-// setupButton(
-//     'highlightHands',
-//     [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
-//     [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
-//     'hands.jpg',
-//     [
-//         {
-//             text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with more of a man-sized hands.",
-//             position: { left: '20px', top: '20px' }
-//         },
-//         {
-//             text: "Many people are in prison for actions they took when they were young; sometimes the deeds of a child can have adult-sized consequences.",
-//             position: { left: '20px', top: '100px' } // Adjust positioning as needed
-//         }
-//     ]
-// );
-
-const splashAnnotations = [
-    {
-        text: "Annotation 1 for Splash.",
-        position: { left: '20px', top: '20px' } // Adjust positioning as needed
-    },
-    {
-        text: "Annotation 2 for Splash.",
-        position: { left: '20px', top: '100px' } // Adjust positioning as needed
-    }
-    // Add more annotations as needed
-];
-
-setupButton(
-    'highlightSplash',
-    [0.09135275057812703, 0.42109411760641313, 0.40722327997076607],
-    [-0.691460007477806, 0.4341025015581536, 0.3350408722453509],
-    'fillourselves.jpg',
-    splashAnnotations
-);
+// Setup event listeners for each button
+//setupButton('highlightHands', [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873], [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574], 'hands.jpg');
+//setupButton('highlightSplash', [0.09135275057812703, 0.42109411760641313, 0.40722327997076607], [-0.691460007477806, 0.4341025015581536, 0.3350408722453509], 'fillourselves.jpg');
+// Repeat for other buttons as necessary
 
 
 document.getElementById('menuIcon').addEventListener('click', function () {

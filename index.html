@@ -253,22 +253,20 @@
             /* Adjust font size as needed */
         }
 
-        .imageAnnotation {
+        .image-container {
+            position: relative;
+            /* Other styles remain unchanged */
+        }
+
+        .annotation {
             position: absolute;
-            background: rgba(0, 0, 0, 0.63);
-            /* Black background with 63% opacity */
+            background: rgba(0, 0, 0, 0.5);
             color: white;
-            /* White text */
-            font-family: 'EB Garamond', serif;
-            /* Consistent font with the rest of the page */
-            padding: 10px;
+            padding: 5px 10px;
             border-radius: 5px;
-            display: none;
-            /* Initially hidden, will be made visible on button click */
+            opacity: 0;
+            /* Start invisible */
             transition: opacity 1s ease-in-out;
-            /* Smooth transition for fading in */
-            z-index: 10;
-            /* Ensure it's above the image */
         }
     </style>
 </head>
@@ -297,7 +295,9 @@
     <h1 id="exploreTheSculpture">Explore the Sculpture in 3D</h1>
     <div class="display-flex">
         <div class="canvas-container" id="canvas-container"></div>
-        <img id="highlightedImage" src="" alt="Highlighted Part" class="image-container">
+        <div class="image-container" id="imageAnnotationContainer">
+            <img id="highlightedImage" src="" alt="Highlighted Part" class="image-container">
+        </div>
     </div>
     <div class="instruction-text">
         <p>Click and drag to rotate around the sculpture (also hold down shift to translate). <br> Use the buttons below
@@ -306,11 +306,11 @@
     </div>
     <div class="buttons-container">
         <button id="logCamera">Log Camera Orientation</button>
-        <button id="highlightHands" data-img-src="hands.png">The Hands</button>
-        <button id="highlightRiver" data-img-src="hands.png">The River</button>
-        <button id="highlightSplash" data-img-src="fillourselves.jpg">The Splash</button>
-        <button id="highlightPart1" data-img-src="hands.png">The Reflection</button>
-        <button id="highlightCracking" data-img-src="cracking.png">Natural Wood Cracking</button>
+        <button id="highlightHands">The Hands</button>
+        <button id="highlightRiver">The River</button>
+        <button id="highlightSplash">The Splash</button>
+        <button id="highlightPart1">The Reflection</button>
+        <button id="highlightCracking">Natural Wood Cracking</button>
     </div>
     <h1 id="PrisonRenaissance">The Prison Renaissance Project at Stanford</h1>
     <script type="module" src="/main.js"></script>
