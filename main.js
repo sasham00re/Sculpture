@@ -47,6 +47,12 @@ function loadOBJModel(objPath, mtlPath) {
                 function (object) {
                     object.position.set(0, 0, 0);
                     scene.add(object);
+                    // Example values from your logs
+                    camera.position.set(-0.8586429836901076, 2.1050869546067896, -2.540819389359814);
+                    camera.rotation.set(-2.857360838307505, -0.3473951555829288, -3.0424591272689696);
+                    controls.target.set(0.20397166403308944, 1.2821221258870192, 0.2761865928121297);
+                    controls.update(); // To ensure the controls' internal state matches the camera and target
+
                     console.log("OBJ loaded successfully!");
                 },
                 function (xhr) {
@@ -100,8 +106,8 @@ onWindowResize();
 
 // orbitControls for interaction
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.addEventListener('change', () => renderer.render(scene, camera)); // Use if there's no animation loop
-controls.minDistance = 0.1;
+controls.addEventListener('change', () => renderer.render(scene, camera));
+controls.minDistance = 0.05;
 controls.maxDistance = 10;
 controls.target.set(0, 0, 0);
 
@@ -112,11 +118,14 @@ function animate() {
 }
 animate();
 
-function moveToPosition(targetPosition, targetRotation, duration = 2000) {
+function moveToPosition(targetPosition, targetRotation, newControlTarget, duration = 2000) {
     const startPosition = camera.position.clone();
     const startQuaternion = camera.quaternion.clone();
+    const startControlTarget = controls.target.clone();
+
     const endPosition = new THREE.Vector3(...targetPosition);
     const endQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(...targetRotation));
+    const endControlTarget = new THREE.Vector3(...newControlTarget);
 
     const startTime = performance.now();
 
@@ -127,19 +136,23 @@ function moveToPosition(targetPosition, targetRotation, duration = 2000) {
         if (fraction < 1) {
             camera.position.lerpVectors(startPosition, endPosition, fraction);
             camera.quaternion.copy(startQuaternion).slerp(endQuaternion, fraction);
+            controls.target.lerpVectors(startControlTarget, endControlTarget, fraction);
+
             requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
         } else {
+            // Ensure the final positions are exactly as specified once the animation completes
             camera.position.copy(endPosition);
             camera.quaternion.copy(endQuaternion);
-            controls.update();
-            renderer.render(scene, camera);
+            controls.target.copy(endControlTarget);
         }
+
+        controls.update(); // This is necessary to make the controls aware of the new camera and target positions
+        renderer.render(scene, camera);
     }
 
     requestAnimationFrame(animate);
 }
+
 
 loadOBJModel('textured.obj', 'textured.mtl');
 
@@ -147,11 +160,12 @@ loadOBJModel('textured.obj', 'textured.mtl');
 document.getElementById('logCamera').addEventListener('click', () => {
     console.log(`Camera Position: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
     console.log(`Camera Rotation: ${camera.rotation.x}, ${camera.rotation.y}, ${camera.rotation.z}`);
+    console.log(`OrbitControls Target: ${controls.target.x}, ${controls.target.y}, ${controls.target.z}`);
 });
 
-function setupButton(buttonId, targetPosition, targetRotation, imgSrc, annotations) {
+function setupButton(buttonId, targetPosition, targetRotation, controlTarget, imgSrc, annotations) {
     document.getElementById(buttonId).addEventListener('click', () => {
-        moveToPosition(targetPosition, targetRotation);
+        moveToPosition(targetPosition, targetRotation, controlTarget);
 
         const imageElement = document.getElementById('highlightedImage');
         const annotationContainer = document.getElementById('imageAnnotationContainer');
@@ -186,6 +200,7 @@ function clearAnnotations(container) {
     container.querySelectorAll('.annotation').forEach(annotation => annotation.remove());
 }
 
+
 function addAnnotations(container, annotations) {
     annotations.forEach((annotation, index) => {
         console.log("getting here");
@@ -203,9 +218,44 @@ function addAnnotations(container, annotations) {
     });
     console.log("annotations added");
 }
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightIntro',
+        [-0.8586429836901076, 2.1050869546067896, -2.540819389359814],
+        [-2.857360838307505, -0.3473951555829288, -3.0424591272689696],
+        [0.20397166403308944, 1.2821221258870192, 0.2761865928121297],
+        'introduction.png',
+        [
+            {
+                text: "Pabulum, meaning intellectual substance, serves as the keystone piece in a larger collaborative art project between incarcerated individuals and Stanford students, Prison Renaissance.", top: 10, left: 0
+            },
+            {
+                text: "The sculpture depicts a child knelt in a river, enriching itself with the words exchanged as seemingly disparate groups explored their shared humanity through art.", top: 65
+                , left: 0
+            }
+        ]
+    );
+});
 
 document.addEventListener('DOMContentLoaded', (event) => {
     setupButton('highlightHands',
+        [-0.3241209098036478, 2.2763584817843983, -0.2867519966435057],
+        [-2.227809023812474, -0.04558634375904463, -3.08258070400209],
+        [-0.26989449162194695, 1.3351154178310811, 0.4392563561836019],
+        'hands.jpg',
+        [
+            {
+                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+            },
+            {
+                text: "Inscription: A way to give voice to the voiceless", top: 43
+                , left: 60
+            }
+        ]
+    );
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightRiver',
         [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
         [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
         'hands.jpg',
@@ -221,11 +271,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
     );
 });
 
-// Setup event listeners for each button
-//setupButton('highlightHands', [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873], [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574], 'hands.jpg');
-//setupButton('highlightSplash', [0.09135275057812703, 0.42109411760641313, 0.40722327997076607], [-0.691460007477806, 0.4341025015581536, 0.3350408722453509], 'fillourselves.jpg');
-// Repeat for other buttons as necessary
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightSplash',
+        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
+        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
+        'hands.jpg',
+        [
+            {
+                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+            },
+            {
+                text: "Inscription: A way to give voice to the voiceless", top: 43
+                , left: 60
+            }
+        ]
+    );
+});
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightSplash',
+        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
+        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
+        'hands.jpg',
+        [
+            {
+                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+            },
+            {
+                text: "Inscription: A way to give voice to the voiceless", top: 43
+                , left: 60
+            },
+            {
+                text: "It's also a symbol of our shared humanity- we are all flawed. - Steve Hann", top: 43
+                , left: 60
+            }
+        ]
+    );
+});
 
 document.getElementById('menuIcon').addEventListener('click', function () {
     const menuIcon = this;
@@ -247,6 +329,3 @@ document.querySelectorAll('#dynamicMenu ul li a').forEach(link => {
         document.getElementById('menuIcon').classList.remove('active');
     });
 });
-
-
-

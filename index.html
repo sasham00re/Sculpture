@@ -268,6 +268,50 @@
             /* Start invisible */
             transition: opacity 1s ease-in-out;
         }
+
+        .artist-image {
+            width: 80vw;
+            /* Make the image full viewport width */
+            height: auto;
+            /* Maintain aspect ratio */
+            display: block;
+            /* Ensure the image is block-level to take up the full line */
+            margin-top: 20px;
+            border-radius: 10px;
+
+            /* Space above the image */
+        }
+
+        .text-content {
+            flex: 1;
+            /* Allows the text content to fill the remaining space */
+            padding: 20px;
+            margin: 40px;
+            /* Change from cover to contain to ensure the full image is visible */
+            background-repeat: no-repeat;
+            /* Cover the entire area of the container */
+            background-position: center center;
+            color: white;
+            justify-content: center;
+            /* Padding around the text */
+            background-color: #543210;
+            /* Optional: Adds a background color to the text container */
+            color: white;
+            /* Text color */
+            border-radius: 10px;
+            /* Optional: Adds rounded corners to the text container */
+
+            /* Darken the background image slightly */
+            font-size: 1em;
+            /* Adjust the font size as necessary */
+
+        }
+
+        .tab {
+            display: inline-block;
+            margin-left: value;
+            /* for e.g: value = 40px*/
+        }
     </style>
 </head>
 
@@ -275,8 +319,8 @@
     <div class="title-image-container">
         <img src="topPic.jpg" alt="title" class="full-width-image">
         <div class="title-content">
-            <h2>Pabulum</h2>
-            <p><i>a sculpture by Vince Pane</i></p>
+            <h1><b>Vincent Pane</b></h1>
+            <p><i>Wood Sculptor</i></p>
         </div>
         <div class="menu-icon-container">
             <img src="menu.png" alt="Menu" id="menuIcon" />
@@ -285,14 +329,14 @@
         <div id="dynamicMenu" class="dynamic-menu" style="display: none;">
             <ul>
                 <li><a href="#exploreTheSculpture">Explore the Sculpture in 3D</a></li>
-                <li><a href="#PrisonRenaissance">The Prison Renaissance Project at Stanford</a></li>
-                <li><a href="#AboutTheArtist">About the Sculptor</a></li>
+                <li><a href="#AboutTheArtist">About the Artist</a></li>
+                <li><a href="#ContactMe">Get in Touch</a></li>
                 <!-- Add more list items/links as needed -->
             </ul>
         </div>
     </div>
 
-    <h1 id="exploreTheSculpture">Explore the Sculpture in 3D</h1>
+    <h2 id="exploreTheSculpture"> Pabulum </h2>
     <div class="display-flex">
         <div class="canvas-container" id="canvas-container"></div>
         <div class="image-container" id="imageAnnotationContainer">
@@ -301,21 +345,81 @@
     </div>
     <div class="instruction-text">
         <p>Click and drag to rotate around the sculpture (also hold down shift to translate). <br> Use the buttons below
-            for a guided tour, including quotes from the artist!
+            for a guided tour of Pabulum.
         </p>
     </div>
     <div class="buttons-container">
         <button id="logCamera">Log Camera Orientation</button>
+        <button id="highlightIntro">Introduction</button>
         <button id="highlightHands">The Hands</button>
         <button id="highlightRiver">The River</button>
         <button id="highlightSplash">The Splash</button>
-        <button id="highlightPart1">The Reflection</button>
+        <button id="highlightReflection">The Reflection</button>
         <button id="highlightCracking">Natural Wood Cracking</button>
     </div>
-    <h1 id="PrisonRenaissance">The Prison Renaissance Project at Stanford</h1>
     <script type="module" src="/main.js"></script>
-    <h1 id="AboutTheArtist">About the Sculptor</h1>
 
+    <h1 id="AboutTheArtist">About the Artist</h1>
+    <h3><b>Vince</b></h3>
+    <h4><i>An engineer without approach, <br> a scientist without method, <br> and an artist with nothing to
+            sell.
+        </i></h4>
+
+    <img src="artistImage.png" alt="Artist Image" class="artist-image">
+    <div class="text-content">
+        <p> <span class="tab"></span>Vince holds a PhD in chemistry from Stanford University,
+            where he researched biodegradable plastics and their application
+            to a manned mission to Mars. He also holds a Master’s degree in mechanical engineering,
+            as well as degrees in math and physics from the Colorado School of Mines, near his hometown of Longmont,
+            CO.
+            <br><br>
+            <span class="tab"></span>Dr. Pane is a multifaceted artist who, alongside sculpture, explores fashion
+            and
+            contemporary dance. He makes
+            most
+            of his clothing and frequently challenges societal norms regarding male self-expression. His
+            site-specific dance
+            choreography incorporates elements of circus arts and dauntless feats of strength, often climbing high
+            in trees
+            or on large public structures. This fits well into his training for American Ninja Warrior, where he has
+            competed for three seasons.
+            <br><br>
+            <span class="tab"></span>After finishing his PhD, Vince retired from lab-based chemistry to focus
+            full-time
+            on art. He thrives in
+            the
+            "starving artist" lifestyle,
+            devoting himself entirely to his craft while making his van a mobile machine shop. You can frequently
+            spot him
+            carving away at an outdoor
+            picnic table on campus. Like Vince’s doctoral research, his art and clothing also champion
+            sustainability. His
+            sculptures mainly utilize
+            reclaimed wood that he collects, debarks, and dries himself. His clothing creatively up-cycles thrifted
+            and
+            unwanted fabric remnants.
+            All his art is priceless because he doesn’t create with the intent to sell, aside from a limited number
+            of
+            commissioned works.
+            <br><br>
+            <span class="tab"></span>Approaching sculpture with the rigor of a scientist, Vince hopes to gain an
+            intimate mastery over
+            geometric,
+            anatomical, and material elements
+            of form and provide a unique lens to visually understand the physical world. Each of Vince’s projects
+            and
+            collaborations exposes him to new
+            sculpting media, enhancing his command over various natural materials and advancing his ambitious goal:
+            bridging
+            the gap between observation
+            and understanding.
+        </p>
+    </div>
+
+
+
+    <h1 id="ContactMe">Get in Touch</h1>
+    <p> email: vpane@stanford.edu <br> Instagram: vince_pane</p>
 
 
 </body>
