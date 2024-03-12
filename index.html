@@ -84,6 +84,8 @@
             /* Full width of its container */
             height: 100%;
             /* Maintain aspect ratio */
+            position: relative;
+
         }
 
         .dynamic-menu {
@@ -253,11 +255,6 @@
             /* Adjust font size as needed */
         }
 
-        .image-container {
-            position: relative;
-            /* Other styles remain unchanged */
-        }
-
         .annotation {
             position: absolute;
             background: rgba(0, 0, 0, 0.5);
@@ -270,16 +267,31 @@
         }
 
         .artist-image {
-            width: 80vw;
+            width: 60vw;
             /* Make the image full viewport width */
             height: auto;
             /* Maintain aspect ratio */
             display: block;
             /* Ensure the image is block-level to take up the full line */
-            margin-top: 20px;
+
             border-radius: 10px;
 
             /* Space above the image */
+        }
+
+
+        figcaption {
+            color: white;
+            /* Caption text color */
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            /* Space between image and caption */
+            font-size: 0.9em;
+            /* Adjust caption font size */
+            font-style: italic;
+            /* Optional: italicize the caption text */
         }
 
         .text-content {
@@ -287,6 +299,7 @@
             /* Allows the text content to fill the remaining space */
             padding: 20px;
             margin: 40px;
+            width: 85vw;
             /* Change from cover to contain to ensure the full image is visible */
             background-repeat: no-repeat;
             /* Cover the entire area of the container */
@@ -419,7 +432,13 @@
 
 
     <h1 id="ContactMe">Get in Touch</h1>
-    <p> email: vpane@stanford.edu <br> Instagram: vince_pane</p>
+    <p> Email: vpane@stanford.edu <br> Instagram: vince_pane</p>
+
+
+    <img src="sashavince.png" alt="Artist Image" class="artist-image">
+    <figcaption>Vince Pane exhibiting three pieces (left to right): Bent
+        out of Face, Pabulum, and Stream of Consciousness with Sasha Moore- website creator.</figcaption>
+
 
 
 </body>

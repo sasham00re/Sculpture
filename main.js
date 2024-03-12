@@ -25,13 +25,33 @@ camera.updateProjectionMatrix();
 
 container.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Soft white light
 scene.add(ambientLight);
+
+
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(0, 1, 0);
 scene.add(directionalLight);
+// Front light
+const lightFront = new THREE.PointLight(0xffffff, 1, 100);
+lightFront.position.set(0, 0, 10); // Adjust the position as needed
+scene.add(lightFront);
 
+// Back light
+const lightBack = new THREE.PointLight(0xffffff, 1, 100);
+lightBack.position.set(0, 0, -10); // Adjust the position as needed
+scene.add(lightBack);
+
+// Left light
+const lightLeft = new THREE.PointLight(0xffffff, 1, 100);
+lightLeft.position.set(-10, 0, 0); // Adjust the position as needed
+scene.add(lightLeft);
+
+// Right light
+const lightRight = new THREE.PointLight(0xffffff, 1, 100);
+lightRight.position.set(10, 0, 0); // Adjust the position as needed
+scene.add(lightRight);
 function loadOBJModel(objPath, mtlPath) {
     console.log("Loading OBJ model with MTL");
 
@@ -218,6 +238,7 @@ function addAnnotations(container, annotations) {
     });
     console.log("annotations added");
 }
+
 document.addEventListener('DOMContentLoaded', (event) => {
     setupButton('highlightIntro',
         [-0.8586429836901076, 2.1050869546067896, -2.540819389359814],
@@ -249,16 +270,59 @@ document.addEventListener('DOMContentLoaded', (event) => {
             {
                 text: "Inscription: A way to give voice to the voiceless", top: 43
                 , left: 60
-            }
+            },
         ]
     );
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
     setupButton('highlightRiver',
-        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
-        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
-        'hands.jpg',
+        [-0.9062771036195839, 1.7173572672692554, -0.3154321343410354],
+        [-1.5707959625585506, 9.314734722988508e-7, 1.1980444276638131],
+        [-0.9062778883178122, 0.8749304546283657, -0.3154324411834993],
+        'whirlpool.png',
+        [
+            {
+                text: "Inscription: People like me can't usually reach people like you. I'm in one of the most isolated places.", top: 20, left: 15
+            },
+            {
+                text: "The river takes on many textures and provides a medium for all of the voices involved in the project. People from Stanford sharedthese quotes as they built relationships with prisoners through letters and phone visits.", top: 60, left: 0
+            },
+            {
+                text: "Inscription: I'm in this box and I'm shaking it. I'm shaking this box.", top: 93
+                , left: -70
+            }
+        ]
+    );
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightSplash',
+        [-0.31917368823111636, 1.8576851389402167, 0.3842309659786198],
+        [-0.8062674491268371, 0.06726291754059158, 0.06996339122682065],
+        [-0.3819835987210497, 1.184772523601622, -0.2611654859611458],
+        'splash.png',
+        [
+            {
+                text: "Inscription: Fill ourselves", top: 20, left: 15
+            },
+            {
+                text: "Fill ourselves is a central message of former inmate and poet Emile Deweaver- the universal desire fill ourselves and lead fulfilling lives, symbolized by the child drinking water. ", top: 60, left: 10
+            },
+            {
+                text: "Inscription: As for what I miss the most definitely barbecuing", top: 93
+                , left: -70
+            }
+        ]
+    );
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupButton('highlightReflection',
+        [-0.3241209098036478, 2.2763584817843983, -0.2867519966435057],
+        [-2.227809023812474, -0.04558634375904463, -3.08258070400209],
+        [-0.26989449162194695, 1.3351154178310811, 0.4392563561836019],
+        'reflection.jpg',
         [
             {
                 text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
@@ -270,40 +334,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
         ]
     );
 });
-
 document.addEventListener('DOMContentLoaded', (event) => {
-    setupButton('highlightSplash',
-        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
-        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
-        'hands.jpg',
+    setupButton('highlightCracking',
+        [-0.37295182804927773, 2.246176422841732, -0.6359514698429303],
+        [-3.0646078384037114, -0.38516939220123153, -3.1126190498752027],
+        [0.1737611480637157, 2.142463942150515, 0.7085670542726883],
+        'cracking.png',
         [
             {
-                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+                text: "Notice the natural cracking on the shoulder and ear from moisture loss. This sculpture is made from 56 naturally-colored pieces of wood from logs found around campus.", top: 10, left: 0
             },
             {
-                text: "Inscription: A way to give voice to the voiceless", top: 43
-                , left: 60
-            }
-        ]
-    );
-});
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    setupButton('highlightSplash',
-        [-0.0660334144529682, 0.6502196321957312, 0.32696100830758873],
-        [-1.1024588704293636, -0.0308862259681673, -0.06096955204728574],
-        'hands.jpg',
-        [
-            {
-                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
-            },
-            {
-                text: "Inscription: A way to give voice to the voiceless", top: 43
+                text: "Cracking is a reality of working with real wood you find- It allows me to carve species of wood not readily available on the market, and I think it adds to the aesthetic. -Vince", top: 43
                 , left: 60
             },
             {
-                text: "It's also a symbol of our shared humanity- we are all flawed. - Steve Hann", top: 43
-                , left: 60
+                text: "It also serves as a symbol of our shared humanity; a reminder that we are all flawed. - Steve Hann", top: 70
+                , left: 20
             }
         ]
     );
