@@ -215,28 +215,34 @@ function setupButton(buttonId, targetPosition, targetRotation, controlTarget, im
 
     });
 }
-
+let animationTimers = [];
 function clearAnnotations(container) {
+
+    animationTimers.forEach(timer => clearTimeout(timer));
+    animationTimers = []; // Reset the list of timers
     container.querySelectorAll('.annotation').forEach(annotation => annotation.remove());
 }
 
 
 function addAnnotations(container, annotations) {
+    clearAnnotations(container);
+
     annotations.forEach((annotation, index) => {
-        console.log("getting here");
+
         const elem = document.createElement('div');
         elem.classList.add('annotation');
         elem.textContent = annotation.text;
         elem.style.top = `${annotation.top}%`;
         elem.style.left = `${annotation.left}%`;
-
+        elem.style.opacity = '0';
         // Append and fade in with delay
         container.appendChild(elem);
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             elem.style.opacity = '1';
         }, 1000 * (index + 1)); // Delay subsequent annotations
+        animationTimers.push(timer);
     });
-    console.log("annotations added");
+
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -247,10 +253,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         'introduction.png',
         [
             {
-                text: "Pabulum, meaning intellectual substance, serves as the keystone piece in a larger collaborative art project between incarcerated individuals and Stanford students, Prison Renaissance.", top: 10, left: 0
+                text: "Pabulum, meaning intellectual sustenance, serves as the keystone piece in a larger collaborative art project between incarcerated individuals and Stanford students: Prison Renaissance.", top: 7, left: 0
             },
             {
-                text: "The sculpture depicts a child knelt in a river, enriching itself with the words exchanged as seemingly disparate groups explored their shared humanity through art.", top: 65
+                text: "The sculpture features a child kneeling in a river, enriching itself with the words exchanged between seemingly disparate groups as they explored their shared humanity through art.", top: 88
                 , left: 0
             }
         ]
@@ -265,10 +271,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         'hands.jpg',
         [
             {
-                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+                text: "The child is depicted with man-sized hands. Many people are in prison for actions they took when they were young; sometimes the deeds of a child can have adult-sized consequences.", top: 12, left: 0
             },
             {
-                text: "Inscription: A way to give voice to the voiceless", top: 43
+                text: "Inscription: Creativity is a way to give voice to the voiceless", top: 24
                 , left: 60
             },
         ]
@@ -277,20 +283,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     setupButton('highlightRiver',
-        [-0.9062771036195839, 1.7173572672692554, -0.3154321343410354],
-        [-1.5707959625585506, 9.314734722988508e-7, 1.1980444276638131],
-        [-0.9062778883178122, 0.8749304546283657, -0.3154324411834993],
+        [-0.818307776718872, 1.9807284760839776, -0.34863969882532353],
+        [-1.8812756598581313, -0.004899673094015359, -3.1263232769493046],
+        [-0.8132976024694499, 1.0070745808103816, -0.036236903760726066],
         'whirlpool.png',
         [
             {
-                text: "Inscription: People like me can't usually reach people like you. I'm in one of the most isolated places.", top: 20, left: 15
+                text: "Inscription: You're the only person that I talk to that I have things in common with really.", top: 3, left: 8
             },
             {
-                text: "The river takes on many textures and provides a medium for all of the voices involved in the project. People from Stanford sharedthese quotes as they built relationships with prisoners through letters and phone visits.", top: 60, left: 0
+                text: "The river takes on many textures and provides a medium for the many voices involved in the project. Students and inmates shared letters, calls, and in person visits throughout the project; words inscribed in the river signify the reltionships built accoss prison walls.", top: 50, left: 0
             },
             {
-                text: "Inscription: I'm in this box and I'm shaking it. I'm shaking this box.", top: 93
-                , left: -70
+                text: "Inscription: I'm in this box and I'm shaking it. I'm shaking this box.", top: 40
+                , left: -90
             }
         ]
     );
@@ -307,7 +313,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 text: "Inscription: Fill ourselves", top: 20, left: 15
             },
             {
-                text: "Fill ourselves is a central message of former inmate and poet Emile Deweaver- the universal desire fill ourselves and lead fulfilling lives, symbolized by the child drinking water. ", top: 60, left: 10
+                text: "(We all want to fill ourselves) is a central message of former inmate and poet Emile Deweaver- the universal desire to lead fulfilling lives, symbolized by the child drinking water. ", top: 75, left: 0
             },
             {
                 text: "Inscription: As for what I miss the most definitely barbecuing", top: 93
@@ -325,10 +331,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         'reflection.jpg',
         [
             {
-                text: "With sculpture, you have to be pretty cognizant of your scale. It's a small child of roughly correct dimension with man-sized hands. Many people are inprison for actions they took when they were young sometimes the deeds of a child can have adult.sized consequences.", top: 10, left: 0
+                text: "The child stares pensively into its hands and its own reflection in the water created from 36 pieces of lnlayed wood.", top: 4, left: 0
             },
             {
-                text: "Inscription: A way to give voice to the voiceless", top: 43
+                text: "People in prison can spend their entire lives mulling over their worst deeds in life. Inscription: we are not our bad choices.", top: 70
                 , left: 60
             }
         ]
@@ -342,14 +348,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         'cracking.png',
         [
             {
-                text: "Notice the natural cracking on the shoulder and ear from moisture loss. This sculpture is made from 56 naturally-colored pieces of wood from logs found around campus.", top: 10, left: 0
+                text: "Notice the natural cracking on the shoulder and ear from moisture loss. This sculpture is made from 56 naturally-colored pieces of wood from logs found around campus.", top: 3, left: 0
             },
             {
-                text: "Cracking is a reality of working with real wood you find- It allows me to carve species of wood not readily available on the market, and I think it adds to the aesthetic. -Vince", top: 43
+                text: "Cracking is a reality of working with real wood you find- It allows me to carve species of wood at scales not readily available on the market, and I think it adds to the aesthetic. -Vince", top: 46
                 , left: 60
             },
             {
-                text: "It also serves as a symbol of our shared humanity; a reminder that we are all flawed. - Steve Hann", top: 70
+                text: "It also serves as a symbol of our shared humanity; a reminder that we are all flawed. - Steve Hann", top: 88
                 , left: 20
             }
         ]
