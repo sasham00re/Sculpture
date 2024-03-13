@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         [-0.3241209098036478, 2.2763584817843983, -0.2867519966435057],
         [-2.227809023812474, -0.04558634375904463, -3.08258070400209],
         [-0.26989449162194695, 1.3351154178310811, 0.4392563561836019],
-        'hands.jpg',
+        'hands.JPG',
         [
             {
                 text: "The child is depicted with man-sized hands. Many people are in prison for actions they took when they were young; sometimes the deeds of a child can have adult-sized consequences.", top: 12, left: 0
