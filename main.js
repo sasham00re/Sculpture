@@ -2,6 +2,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+//using CDN! 
+// import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.cjs';
+// import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
+// import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/loaders/MTLLoader.js';
+// import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/loaders/OBJLoader.js';
 // want issues to commit
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -177,11 +182,11 @@ function moveToPosition(targetPosition, targetRotation, newControlTarget, durati
 loadOBJModel('textured.obj', 'textured.mtl');
 
 //button to give camera orientation - use in development to choose a highlight position!  
-document.getElementById('logCamera').addEventListener('click', () => {
-    console.log(`Camera Position: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
-    console.log(`Camera Rotation: ${camera.rotation.x}, ${camera.rotation.y}, ${camera.rotation.z}`);
-    console.log(`OrbitControls Target: ${controls.target.x}, ${controls.target.y}, ${controls.target.z}`);
-});
+// document.getElementById('logCamera').addEventListener('click', () => {
+//     console.log(`Camera Position: ${camera.position.x}, ${camera.position.y}, ${camera.position.z}`);
+//     console.log(`Camera Rotation: ${camera.rotation.x}, ${camera.rotation.y}, ${camera.rotation.z}`);
+//     console.log(`OrbitControls Target: ${controls.target.x}, ${controls.target.y}, ${controls.target.z}`);
+// });
 
 function setupButton(buttonId, targetPosition, targetRotation, controlTarget, imgSrc, annotations) {
     document.getElementById(buttonId).addEventListener('click', () => {
@@ -355,7 +360,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 , left: 60
             },
             {
-                text: "It also serves as a symbol of our shared humanity; a reminder that we are all flawed. - Steve Hann", top: 88
+                text: "It also symbolically speaks to the fact that we are all flawed. - Steve Hann", top: 88
                 , left: 20
             }
         ]
