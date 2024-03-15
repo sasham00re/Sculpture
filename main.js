@@ -63,8 +63,11 @@ scene.add(lightLeft);
 const lightRight = new THREE.PointLight(0xffffff, 1, 100);
 lightRight.position.set(10, 0, 0); // Adjust the position as needed
 scene.add(lightRight);
+
 function loadOBJModel(objPath, mtlPath) {
     console.log("Loading OBJ model with MTL");
+    const loadingBarContainer = document.getElementById('loadingBarContainer');
+    const loadingBarElement = document.getElementById('loadingBar');
 
     new MTLLoader()
         .load(mtlPath, function (materials) {
@@ -75,33 +78,44 @@ function loadOBJModel(objPath, mtlPath) {
 
             objLoader.load(
                 objPath,
-                function (object) {
-                    object.position.set(0, 0, 0);
+                function (object) {  // onLoad callback
                     scene.add(object);
-                    // Example values from your logs
+
                     camera.position.set(-0.8586429836901076, 2.1050869546067896, -2.540819389359814);
                     camera.rotation.set(-2.857360838307505, -0.3473951555829288, -3.0424591272689696);
                     controls.target.set(0.20397166403308944, 1.2821221258870192, 0.2761865928121297);
-                    controls.update(); // To ensure the controls' internal state matches the camera and target
+                    controls.update();
 
                     console.log("OBJ loaded successfully!");
+
+                    // Hide the loading bar once the model is fully loaded
+                    loadingBarContainer.style.display = 'none';
                 },
-                function (xhr) {
-                    console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
+                function (xhr) {  // onProgress callback
+                    if (xhr.lengthComputable) {
+                        const percentComplete = xhr.loaded / xhr.total * 100;
+                        loadingBarElement.style.width = percentComplete + '%';
+                        console.log(percentComplete + '% loaded');
+                    }
                 },
-                function (error) {
+                function (error) {  // onError callback
                     console.error('An error happened during the OBJ loading');
                 }
             );
         },
-            function (xhr) {
-                console.log(`MTL loading progress: ${(xhr.loaded / xhr.total * 100)}% loaded`);
+            function (xhr) {  // onProgress callback for MTL loading
+                if (xhr.lengthComputable) {
+                    const percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(`MTL loading progress: ${percentComplete}% loaded`);
+                    loadingBarElement.style.width = percentComplete + '%';
+                }
             },
             function (error) {
                 console.error('An error happened during the MTL loading');
             }
         );
 }
+
 
 function onWindowResize() {
     // Identify both containers
